@@ -74,12 +74,13 @@ def load_rag_chain():
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=600, chunk_overlap=100)
         splits = text_splitter.split_documents(university_data)
         
-        qdrant_store = QdrantVectorStore(
+        # FIX: Directly build from documents instead of searching for a collection that doesn't exist yet
+        qdrant_store = QdrantVectorStore.from_documents(
+            documents=splits,
+            embedding=embeddings,
             client=client,
-            collection_name=collection_name,
-            embedding=embeddings
+            collection_name=collection_name
         )
-        qdrant_store.add_documents(splits)
         
     retriever = qdrant_store.as_retriever(search_kwargs={"k": 4})
     llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0.2)

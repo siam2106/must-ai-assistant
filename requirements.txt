@@ -1,0 +1,6 @@
+streamlit
+langchain-core
+langchain-groq
+langchain-qdrant
+langchain-classic
+qdrant-client
